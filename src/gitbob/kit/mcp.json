@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "gitbob": {
+      "command": "gitbob",
+      "args": ["serve"],
+      "cwd": "${workspaceFolder}",
+      "timeout": 60,
+      "alwaysAllow": [
+        "git_status",
+        "git_log",
+        "git_diff",
+        "git_branches",
+        "git_reflog",
+        "git_repo_overview",
+        "git_timeline",
+        "git_explain_risk"
+      ]
+    }
+  }
+}
