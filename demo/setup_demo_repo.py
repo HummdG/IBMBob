@@ -14,7 +14,6 @@ Run:  .venv/Scripts/python.exe demo/setup_demo_repo.py
 
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import stat
@@ -75,25 +74,18 @@ def write(rel: str, content: str) -> None:
 
 
 def install_kit() -> None:
-    """Copy the kit, then reuse gitbob's OWN PATH-proof mcp.json writer
-    (single source of truth — no divergent copy of that logic here), and
-    pin ``cwd`` to the absolute demo path so the recording never depends
-    on Bob expanding ``${workspaceFolder}``.
+    """Copy the kit and reuse gitbob's OWN mcp.json writer (single
+    source of truth). ``cwd`` stays ``${workspaceFolder}`` and the
+    command is portable when ``gitbob`` is on PATH — so the demo works
+    wherever it is opened or cloned, on any machine.
     """
     sys.path.insert(0, str(PROJECT / "src"))
     from gitbob.cli import _copy_kit, _write_mcp_json  # noqa: WPS433
 
     for line in _copy_kit(str(DEMO), force=True):
         print(f"  {line}")
-
     cmd = _write_mcp_json(str(DEMO))
-
-    mcp_path = DEMO / ".bob" / "mcp.json"
-    cfg = json.loads(mcp_path.read_text(encoding="utf-8"))
-    cfg["mcpServers"]["gitbob"]["cwd"] = str(DEMO)
-    mcp_path.write_text(json.dumps(cfg, indent=2) + "\n", encoding="utf-8")
-    print(f"  wired: .bob/mcp.json -> {cmd}")
-    print(f"          cwd -> {DEMO}")
+    print("  wired: .bob/mcp.json -> " + cmd + "  (cwd: ${workspaceFolder})")
 
 
 ORIGIN = PROJECT / "demo-origin.git"

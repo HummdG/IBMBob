@@ -42,14 +42,20 @@ _READ_TOOLS = [
 
 
 def _server_command() -> tuple[str, list[str]]:
-    """The most PATH-proof way to launch the server.
+    """The command Bob should use to spawn the server, chosen so it
+    resolves on the *target* machine.
 
-    Bob spawns MCP servers with the *system* environment, where a
-    virtualenv's ``gitbob`` is not on PATH — the classic "0 tools"
-    failure. Prefer the absolute path to this interpreter's ``gitbob``
-    console script; fall back to running the module with this exact
-    interpreter (still absolute, still PATH-independent).
+    1. **Portable (every machine):** if ``gitbob`` is on PATH — a real
+       ``pipx``/``pip`` install — return the bare command. Bob spawns
+       with the system environment, so this is exactly what Bob resolves
+       too, on any machine, in any cwd, and it is safe to commit.
+    2. **Raw dev checkout** (a virtualenv whose ``Scripts``/``bin`` is
+       not on PATH — the classic "0 tools" case): the absolute path to
+       *this* interpreter's ``gitbob`` console script.
+    3. **Last resort:** run the module with this exact interpreter.
     """
+    if shutil.which("gitbob"):
+        return "gitbob", ["serve"]
     scripts = os.path.dirname(sys.executable)
     exe = os.path.join(
         scripts, "gitbob.exe" if os.name == "nt" else "gitbob")

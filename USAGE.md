@@ -88,17 +88,30 @@ This writes into that repo:
 | `.bob/rules-gitbob/01..05*.md` | Workflow, safety, onboarding, timeline, danger rules |
 | `AGENTS.md` | Persistent context so Bob knows GitBob is available |
 
-### The `gitbob` command must be findable by Bob — handled for you
+### Works on every machine — install once with `pipx`
 
 Bob launches MCP servers with the **system** environment, where a
 virtualenv's `gitbob` is **not** on `PATH` (the classic "0 tools"
-failure). **`gitbob init` now handles this automatically** — it writes
-`.bob/mcp.json` with an *absolute* `command` pointing at the exact
-`gitbob` (or `python -m gitbob`) that ran `init`. Verify with
-`gitbob doctor <repo>`, which now reports **"Bob can spawn server from
-.bob/mcp.json"** (a `[XX]` there prints the exact fix).
+failure). The fix that works on **every machine**:
 
-If you ever need to set it by hand, either of these still works:
+```powershell
+pipx install gitbob        # or: pipx install git+https://github.com/<you>/<repo>
+```
+
+`pipx` puts `gitbob` on the real `PATH`. Then **`gitbob init` writes a
+portable `"command": "gitbob"`** into `.bob/mcp.json` (`cwd` stays
+`${workspaceFolder}`) — safe to commit, works on any machine, in any
+repo, wherever it's cloned. (Only a raw dev checkout with no `pipx`/PATH
+install falls back to a machine-local absolute path — never commit that;
+it's `.gitignore`d for `demo-repo`.)
+
+Then either run `gitbob init` per repo, **or** add `gitbob` once to IBM
+Bob's **global** MCP settings so every repo you open has the tools with
+no per-repo step. Verify any repo with `gitbob doctor <repo>` — it
+reports **"Bob can spawn server from .bob/mcp.json"** (a `[XX]` prints
+the exact fix).
+
+If you ever need to set it by hand, either of these also works:
 
 1. **Absolute path (most reliable).** Edit the repo's `.bob/mcp.json` so
    `command` is the full path to the venv binary:

@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+
+# Virtualenv (machine-specific; recreate with `python -m venv .venv`)
+.venv/
+
+# Generated demo state — machine-specific, regenerate locally with
+#   python demo/setup_demo_repo.py
+/demo-origin.git/
+/.demo-teammate/
+# The demo's mcp.json command is resolved for the machine that ran the
+# generator; never commit it — each machine regenerates its own.
+/demo-repo/.bob/mcp.json
+
+# OS
+.DS_Store
+Thumbs.db
