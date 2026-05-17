@@ -9,13 +9,14 @@ dist/
 # Virtualenv (machine-specific; recreate with `python -m venv .venv`)
 .venv/
 
-# Generated demo state — machine-specific, regenerate locally with
+# Generated, machine-specific demo state. Regenerate locally with:
+#   pipx install gitbob          (or: pipx install .)
 #   python demo/setup_demo_repo.py
-/demo-origin.git/
-/.demo-teammate/
-# The demo's mcp.json command is resolved for the machine that ran the
-# generator; never commit it — each machine regenerates its own.
-/demo-repo/.bob/mcp.json
+# demo-repo is fully generated — it must NOT be tracked (it was an
+# embedded git repo / gitlink; run `git rm --cached demo-repo` once).
+demo-origin.git/
+.demo-teammate/
+demo-repo/
 
 # OS
 .DS_Store
